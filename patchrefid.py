@@ -1,19 +1,24 @@
-# from sshtunnel import SSHTunnelForwarder
-# import pymongo
-#
-# MONGO_HOST = "3.7.62.38"
-#
-# server = SSHTunnelForwarder(
-#     MONGO_HOST,
-#     ssh_pkey='C:\\Users\\KEDAR\\PycharmProjects\\SudanConsultancy\\id_rsa',
-#     ssh_username='ubuntu',
-#     remote_bind_address=('127.0.0.1', 27017)
-# )
-# f = open('C:\\Users\\KEDAR\\PycharmProjects\\SudanConsultancy\\id_rsa')
-# server.ssh_pkeys.clear()
-# server.start()
-# client = pymongo.MongoClient('mongodb://prabjyot:PiPcJp8UTf6K@localhost:27017/siddhiart')
-# db = client['siddhiart']
-# col=db.get_collection('items')
+import ast
+import pymongo
+import requests
+import json
 
-print('testing git')
+
+
+def createConn(client, database, collection):
+    myclient = pymongo.MongoClient(client)
+    mydb = myclient[database]
+    mycol = mydb[collection]
+    return mycol
+
+
+db1 = requests.get('http://siddhiartjewellery.true-order.com/WebReporter/api/v1/items', headers={'Content-Type': ''
+                                                                                                                 'application/json;charset=UTF-8',
+                                                                                                 'X-Auth-Token': '20D48FEA0700964D5FF5A51519F925D464D862798609188500AB67277A82E796FE7A104D6C57DDAB'})
+data1=db1.json()['items']
+
+db2 = createConn("mongodb://prabjyot:PiPcJp8UTf6K@localhost:27017/siddhiart", "siddhiart", "items")
+
+print(db2.find())
+for i in db2.find():
+    print(i)
