@@ -31,11 +31,11 @@ for item in data1:
             item['refId'] = stock['itemReferenceCode']
 
             db2.insert_one(item)
-            print('missing', stock["stock"], {"itemId": itemid, "refId": stock['itemReferenceCode']})
+            # print('missing', stock["stock"], {"itemId": itemid, "refId": stock['itemReferenceCode']})
 
         elif stock["stock"] != target['stock']['stock']:
-            print('stcokchhange', stock["stock"], target['stock']['stock'],
-                  {"itemId": itemid, "refId": stock['itemReferenceCode']})
+            # print('stcokchhange', stock["stock"], target['stock']['stock'],
+            #       {"itemId": itemid, "refId": stock['itemReferenceCode']})
             target['stock']['stock'] = stock['stock']
             newvalues = {"$set": {"stock": target['stock']}}
             x = db2.update_one(target_query, newvalues)
