@@ -2,11 +2,11 @@ import pymongo
 import requests
 
 
-def createConn(client, database, collection):
+def createConn(client, database):
     myclient = pymongo.MongoClient(client)
     mydb = myclient[database]
-    mycol = mydb[collection]
-    return mycol
+    # mycol = mydb[collection]
+    return mydb
 
 
 db1 = requests.get(
@@ -15,12 +15,16 @@ db1 = requests.get(
                              'application/json;charset=UTF-8',
              'X-Auth-Token': '20D48FEA0700964D5FF5A51519F925D464D862798609188500AB67277A82E796FE7A104D6C57DDAB'})
 data1 = db1.json()['items']
-db2 = createConn("mongodb://localhost:27017/", "syncdatabae2", "items2")
+db = createConn("mongodb://localhost:27017/", "syncdatabae2")
+db3=db['ran']
+db2 = db['items']
+
 for item in data1:
     itemid = item['itemId']
     for stock in item['stock']:
         target_query = {"itemId": itemid, "refId": stock['itemReferenceCode']}
         target = db2.find_one(target_query)
+        print('--')
         if target is None:
             if '_id' in stock:
                 del stock['_id']
@@ -39,3 +43,5 @@ for item in data1:
             target['stock']['stock'] = stock['stock']
             newvalues = {"$set": {"stock": target['stock']}}
             x = db2.update_one(target_query, newvalues)
+dd=db3.update_many({},{'$set':{'ran':1}})
+print(dd)
